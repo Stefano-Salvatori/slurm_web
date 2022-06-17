@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.1.1/dist/select2-bootstrap-5-theme.min.css" />
+
+    <title> Slurm Web </title>
+</head>
+
+{% if nodes %}
+{% for node in nodes %}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">{{node.name}}</h4>
+        <h5 class="card-sutitle">{{node.ip}}</h5>
+        {% for gpu in node.gpus %}
+        {% for gpu_index in range(node["gpus"][gpu]) %}
+        <div class="card" style="width: 15rem;">
+        <h6 class="card-title">{{gpu}} {{gpu_index}}</h6>
+        {% for job in node.allocated_jobs %}
+        {% if gpu_index in job.gpu_indices %}
+        <p class="card-text">{{job.id}} {{job.user}}</p>
+        {% endif %}
+        {% endfor %}
+        </div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<h1>No Nodes</h1>
+{% endif %}
