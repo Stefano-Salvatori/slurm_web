@@ -1,46 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+{% with title="Slurm Web" %}{% include "head.html" %}{% endwith %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<body>
+    {% with page="home" %}{% include "navigation.html" %}{% endwith %}
+    <div class="container-fluid p-3">
+        <div class="row">
+            {% for node in nodes %}
+            <div class="col-sm">
+                <div class="card h-100 node-card" id="{{node.ip}}" data-hostname="{{node.hostname}}">
+                    <h5 class="card-header">{{node.hostname}}</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">{{node.ip}}</h5>
+                        <h6 class="card-subtitle">Gpu Jobs</h6>
+                        {% for gpu in node.gpus %}
+                        {% for gpu_index in range(node["gpus"][gpu]) %}
+                        <div class="card mt-3 gpu-card">
+                            <h6 class="card-title m-2">{{gpu_index}} - {{gpu}}</h6>
+                            <ul class="list-group list-group-flush">
+                                {% for job in node.allocated_jobs | selectattr("state", "equalto", "RUNNING") %}
+                                {% if job.gpu_indices and gpu_index in job.gpu_indices %}
+                                <li class="list-group-item">{{job.id}} - {{job.user|capitalize}} -
+                                    <tt>{{job.task_name}}</tt>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <div class="card-footer">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                  </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endfor %}
 
+                        {% if node.allocated_jobs|rejectattr("gpu_indices")|list|length > 0 %}
+                        <h6 class="card-subtitle mt-3">Other Jobs</h6>
+                        {% endif %}
+                        <ul class="list-group">
+                            {% for job in node.allocated_jobs %}
+                            {% if not job.gpu_indices %}
+                            <li class="list-group-item">{{job.id}} - {{job.user|capitalize}}</li>
+                            {% endif %}
+                            {% endfor %}
+                            <ul class="list-group"></ul>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.1.1/dist/select2-bootstrap-5-theme.min.css" />
-
-    <title> Slurm Web </title>
-</head>
-
-{% if nodes %}
-{% for node in nodes %}
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">{{node.name}}</h4>
-        <h5 class="card-sutitle">{{node.ip}}</h5>
-        {% for gpu in node.gpus %}
-        {% for gpu_index in range(node["gpus"][gpu]) %}
-        <div class="card" style="width: 15rem;">
-        <h6 class="card-title">{{gpu}} {{gpu_index}}</h6>
-        {% for job in node.allocated_jobs %}
-        {% if gpu_index in job.gpu_indices %}
-        <p class="card-text">{{job.id}} {{job.user}}</p>
-        {% endif %}
-        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-        {% endfor %}
+        {% if jobs|selectattr("state", "equalto", "PENDING")|list|length > 0 %}
+        <div class="row">
+            <h2>Task Queue</h2>
+            <ul class="list-group list-group-flush">
+                {% for job in jobs | selectattr("state","equalto","PENDING") %}
+                <li class="list-group-item">{{job.id}} - {{job.user|capitalize}} - <tt>{{job.task_name}}</tt>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
-</div>
-{% endfor %}
-{% else %}
-<h1>No Nodes</h1>
-{% endif %}
+
+    <script src="{{ url_for('static', filename='javascript.js') }}"></script>
+</body>
