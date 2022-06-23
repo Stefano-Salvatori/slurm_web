@@ -1,10 +1,7 @@
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Tuple
-import json
 import re
-
-
 from flaskr.command_executor import CommandExecutor
 
 
@@ -64,7 +61,7 @@ class Slurm:
         self.command_executor = CommandExecutor()
 
     def num_nodes(self):
-        return self.command_executor.execute("sinfo --Format=Nodes --noheader")
+        return int(self.command_executor.execute("sinfo --Format=Nodes --noheader"))
 
     def cluster_nodes(self) -> List[Node]:
         nodes_info = self.command_executor.execute(
@@ -127,8 +124,4 @@ class Slurm:
         return gpus
 
     def all_gpu_stats(self) -> Dict[str, List[Gpu]]:
-        nodes = self.cluster_nodes()
-        d = {}
-        for node in nodes:
-            d[node.ip] = self.gpu_stats(node.hostname)
-        return d
+        return {node.ip: self.gpu_stats(node.hostname) for node in self.cluster_nodes()}
