@@ -2,8 +2,6 @@
 #export LC_ALL=C.UTF-8
 #export LANG=C.UTF-8
 
-# sudo -u munge munged
-
 eval "$(conda shell.bash hook)"
 conda activate slurm_web
 
