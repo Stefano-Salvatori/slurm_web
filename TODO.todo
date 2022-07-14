@@ -1,7 +1,7 @@
 Todos: 
 ☐ (1) Parse commands with json
-☐ (2) Add task number in queue
-☐ (3) Job priority for nvidia-smi
+✔ (2) Add task number in queue @done(22-07-14 12:38)
+✔ (3) Job priority for nvidia-smi @done(22-07-14 12:38)
     https://slurm.schedmd.com/srun.html#OPT_priority
-    ☐ Add polling to automatically fetch gpu stats
+    ✔ Add polling to automatically fetch gpu stats @done(22-07-14 12:38)
 

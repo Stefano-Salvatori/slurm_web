@@ -1,5 +1,5 @@
 $(document).ready(async () => {
-  load_gpus_info();
+  gpus_info_interval = setIntervalImmediately(load_gpus_info, 5000);
 });
 
 function load_gpus_info() {
@@ -32,4 +32,14 @@ function temperature_to_label(temp) {
   } else {
     return "primary";
   }
+}
+
+function setIntervalImmediately(func, interval) {
+  /**
+   * Immediatley execute a function and then executes it after a specific interval
+   * 
+   * returns: The interval object 
+   */
+  func()
+  return setInterval(func, interval)
 }

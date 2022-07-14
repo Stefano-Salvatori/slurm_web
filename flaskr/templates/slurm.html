@@ -55,7 +55,7 @@
         </div>
         {% if jobs|selectattr("state", "equalto", "PENDING")|list|length > 0 %}
         <div class="row">
-            <h2>Task Queue</h2>
+            <h2>Task Queue ({{jobs | selectattr("state","equalto","PENDING")|list|length}})</h2>
             <ul class="list-group list-group-flush">
                 {% for job in jobs | selectattr("state","equalto","PENDING") %}
                 <li class="list-group-item">{{job.id}} - {{job.user|capitalize}} - <tt>{{job.task_name}}</tt>

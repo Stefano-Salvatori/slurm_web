@@ -109,7 +109,7 @@ class Slurm:
             return jobs_list
 
         command_output = self.command_executor.execute(
-            "squeue --Format=JobID,Name,UserName:50,State,TimeUsed,NumNodes,NodeList:50 --noheader",
+            "squeue --Format=JobID,Name:50,UserName:50,State,TimeUsed,NumNodes,NodeList:50 --noheader",
             split_new_lines=True,
         )
         return _parse_jobs(command_output)
@@ -130,7 +130,7 @@ class Slurm:
             return gpus
 
         gpu_stats = self.command_executor.execute(
-            f"srun -w {node_hostname} -D /tmp -c 1 nvidia-smi --query-gpu=index,temperature.gpu,memory.used,gpu_name --format=csv,noheader,nounits",
+            f"srun -w {node_hostname} --priority='TOP' -D /tmp -c 1 nvidia-smi --query-gpu=index,temperature.gpu,memory.used,gpu_name --format=csv,noheader,nounits",
             split_new_lines=True,
         )
         return _parse_gpu_stats(gpu_stats)
