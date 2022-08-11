@@ -1,7 +1,11 @@
 Todos: 
 ☐ (1) Parse commands with json
 ✔ (2) Add task number in queue @done(22-07-14 12:38)
+    ☐ (2.1) Group count by user
 ✔ (3) Job priority for nvidia-smi @done(22-07-14 12:38)
     https://slurm.schedmd.com/srun.html#OPT_priority
-    ✔ Add polling to automatically fetch gpu stats @done(22-07-14 12:38)
-
+    ✔ (3.1) Add polling to automatically fetch gpu stats @done(22-07-14 12:38)
+☐ (4) Maybe it's better to call the 'nvidia-smi' job internally every N seconds and store the result 
+    This way a user cannot 'saturate' the task queue with nvidia-smi calls
+✔ (5) Add a section in the guide on how to start docker if it is not working (i.e. systemctl --user start docker) @done(22-08-11 15:08)
+☐ (6) It seems that when a node is down the whole application doesn't work

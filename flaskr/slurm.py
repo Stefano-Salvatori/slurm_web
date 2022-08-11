@@ -27,6 +27,7 @@ class Gpu:
     type: GpuType
     memory_occupied: int
     temperature: int
+    gpu_utilization: int
 
 
 @dataclass
@@ -118,19 +119,20 @@ class Slurm:
         def _parse_gpu_stats(command_output_lines: List[str]):
             gpus = []
             for g in command_output_lines:
-                gpu_index, gpu_temp, gpu_mem, gpu_name = g.strip().split(",")
+                gpu_index, gpu_temp, gpu_mem, gpu_name, gpu_utilization = g.strip().split(",")
                 gpus.append(
                     Gpu(
                         index=int(gpu_index),
                         type=GpuType.gpu_by_label(gpu_name.lstrip().replace(" ", "_").lower()),
                         memory_occupied=int(gpu_mem),
                         temperature=int(gpu_temp),
+                        gpu_utilization=int(gpu_utilization),
                     )
                 )
             return gpus
 
         gpu_stats = self.command_executor.execute(
-            f"srun -w {node_hostname} --priority='TOP' -D /tmp -c 1 nvidia-smi --query-gpu=index,temperature.gpu,memory.used,gpu_name --format=csv,noheader,nounits",
+            f"srun -w {node_hostname} --priority='TOP' -D /tmp -c 1 nvidia-smi --query-gpu=index,temperature.gpu,memory.used,gpu_name,utilization.gpu --format=csv,noheader,nounits",
             split_new_lines=True,
         )
         return _parse_gpu_stats(gpu_stats)

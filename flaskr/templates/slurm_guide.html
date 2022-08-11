@@ -2,13 +2,11 @@
 <html lang="en">
 
 {% with title="Slurm Web | Guide" %}{% include "head.html" %}{% endwith %}
+
 <body>
     {% with page="guide" %}{% include "navigation.html" %}{% endwith %}
     <div class="container-fluid p-3">
-        <h1 id="slurm-guide">SLURM Guide</h1>
-        <p><a href="https://slurm.schedmd.com/" target="_blank">SLURM</a> is a cluster manager that allows us to
-            dynamically schedule
-            and allocate tasks on our GPUs.</p>
+        <h1 id="slurm-guide">Cluster Usage Guide</h1>
         <p>Our cluster includes 3 servers:</p>
         <ul>
             <li>137.204.107.40 (<em>faretra</em>)
@@ -34,13 +32,20 @@
             executed.</p>
         <h2 id="preliminary-steps">Preliminary Steps</h2>
         <ol>
-            <li>Make sure you have an account on all 3 servers</li>
+            <li>Make sure you have an account on all 3 servers by logging in with the credential that you have been
+                provided</li>
+            <li> Change your password with a private one containing at least 10 characters; user lower case and upper
+                case letters adding also numbers and symbols</li>
+            <li>You should always use the <em>'byobu'</em> terminal (just type <kbd>byobu</kbd> after you login). This way, the
+                shell that is opened and on which you will execute the commands, remains active even when the terminal is
+                closed (this is useful if you want to run long jobs)
+            </li>
             <li>
                 <p>
                     Check that <code>docker_rootless</code> has been installed on each server by running the following
-                    command: <kbd> docker ps</kbd>.
+                    command: <kbd> docker ps </kbd> on each of them (check that no errors are returned).
                     <br>
-                    If docker is not already installed, run: <kbd> install_rootless_docker.sh</kbd>
+                    If docker is not working try to execute <kbd> systemctl --user start docker </kbd>
                 </p>
             </li>
             <li>
@@ -55,13 +60,22 @@
 137.204.107.153     16        gpu:titan_xp:2(S:0)</samp></pre>
             </li>
         </ol>
-        <p><em><strong>NB:</strong> SLURM does not automatically manage the distribution of files. Each user must make
-                sure they have the same file structure and directory on each server. It is possible to move files
-                between servers using the <code>scp</code> command. For example, to copy the &#39;project&#39; folder
+        <p><em><strong>NB:</strong> We don't have a software that automatically manages the distribution of files. Each
+                user must make sure they have the same file structure and directory on each server. You can use the
+                <code>rsync</code>
+                command (<a href="https://www.tecmint.com/rsync-local-remote-file-synchronization-commands/">guide</a>) before executing a
+                job in order to synchronize
+                the directories among the servers.
+
+                It is also possible to move files between servers using the <code>scp</code> command. For example, to
+                copy the &#39;project&#39; folder
                 from the home of server 40 to the home of server 153 you can execute</em></p>
         <kbd>scp -P 37335 -r /home/&lt;user&gt;/project &lt;username&gt;@137.204.107.153:/home/&lt;user&gt;</kbd>
         <br><br>
         <h2 id="executing-tasks-with-slurm">Executing Tasks with SLURM</h2>
+        <p><a href="https://slurm.schedmd.com/" target="_blank">SLURM</a> is a cluster manager that allows us to
+            dynamically schedule
+            and allocate tasks on our GPUs.</p>
         <h3 id="real-time-mode-srun-">Real Time mode (SRUN)</h3>
         <p>The command <a href="https://slurm.schedmd.com/srun.html"><strong>srun</strong></a> can be used to execute
             tasks in <em>real time</em> mode, allocating a certain number of GPUs. <code>srun</code> is

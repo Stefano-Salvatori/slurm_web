@@ -14,10 +14,12 @@ function load_gpus_info() {
             temp = json[index].temperature;
             mem_occ = (json[index].memory_occupied / 1000).toFixed(1);
             mem_tot = (json[index].type[1] / 1000).toFixed(1);
+            util = json[index].gpu_utilization
             temp_label = temperature_to_label(temp);
             $(gpu).children(".card-footer").html(`
                 <span class="badge bg-${temp_label}">temp: ${temp}°</span>
-                <span class="badge bg-info">mem: ${mem_occ}G / ${mem_tot}G</span>`);
+                <span class="badge bg-info">mem: ${mem_occ}G / ${mem_tot}G</span>
+                <span class="badge bg-secondary">usage: ${util}%</span>`);
           });
       })
       .catch((err) => console.log("Request Failed", err));
