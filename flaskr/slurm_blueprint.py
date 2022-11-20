@@ -11,9 +11,9 @@ slurm_api = Slurm()
 @slurm_bp.route("/", methods=["GET"])
 def sinfo():
     jobs = slurm_api.get_jobs()
-    nodes = sorted(slurm_api.cluster_nodes(), key=lambda n: socket.inet_aton(n.ip))
+    nodes = sorted(slurm_api.get_nodes(), key=lambda n: socket.inet_aton(n.address))
     for node in nodes:
-        node.allocated_jobs = [j for j in jobs if node.hostname in j.nodes]
+        node.allocated_jobs = [j for j in jobs if node.hostname == j.nodes]
     return render_template("slurm.html", nodes=nodes, jobs=jobs)
 
 
@@ -21,6 +21,7 @@ def sinfo():
 def guide():
     return render_template("slurm_guide.html")
 
-@slurm_bp.route('/api/v1/nodes/<hostname>/gpus', methods=["GET"])
-def node_gpus(hostname:str):
+
+@slurm_bp.route("/api/v1/nodes/<hostname>/gpus", methods=["GET"])
+def node_gpus(hostname: str):
     return json.dumps(slurm_api.gpu_stats(hostname), default=vars)

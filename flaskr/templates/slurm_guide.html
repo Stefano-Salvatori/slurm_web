@@ -43,7 +43,7 @@
             <li>
                 <p>
                     Check that <code>docker_rootless</code> has been installed on each server by running the following
-                    command: <kbd> docker ps </kbd> on each of them (check that no errors are returned).
+                    command: <kbd> docker ps</kbd> on each of them (check that no errors are returned).
                     <br>
                     If docker is not working try to execute <kbd> systemctl --user start docker </kbd>
                 </p>
@@ -60,18 +60,55 @@
 137.204.107.153     16        gpu:titan_xp:2(S:0)</samp></pre>
             </li>
         </ol>
-        <p><em><strong>NB:</strong> We don't have a software that automatically manages the distribution of files. Each
-                user must make sure they have the same file structure and directory on each server. You can use the
-                <code>rsync</code>
-                command (<a href="https://www.tecmint.com/rsync-local-remote-file-synchronization-commands/">guide</a>) before executing a
-                job in order to synchronize
-                the directories among the servers.
+        <h2 id="file-distribution">File Distribution and Synchronization</h2>
+        <p><strong>NB:</strong> We don't have a software that automatically manages the distribution of files. Each
+                user must make sure to keep files and folders synchronized on each server. To do so you can use
+                <code>unison</code>. 
+        <h3>Synchronization with UNISON</h3>        
+        Move into your own folder of the main server 137.204.107.40; create the <tt>.unison</tt> folder if it doesn't already exist. Then create a file named <tt>sync_43.prf</tt> with the following content (replace YOUR_HOME with the path to your home directory e.g., <tt>/home/salvatori</tt>):
+    <pre>
+    root = YOUR_HOME
+    root = ssh://137.204.107.43/YOUR_HOME
+    sshargs = -p 22
 
-                It is also possible to move files between servers using the <code>scp</code> command. For example, to
-                copy the &#39;project&#39; folder
-                from the home of server 40 to the home of server 153 you can execute</em></p>
+    # Files and Folders to ignore 
+    # (see https://www.seas.upenn.edu/~bcpierce/unison/download/releases/beta/unison-manual.html#sec53)
+    ignore = Path .*
+    ignore = Name .*
+    ignore = Name *.pyc
+    ignore = Path bin
+    ignore = Path miniconda*
+    ignore = Path conda*
+    ignore = Name __pycache__
+
+    # Other config
+    prefer = YOUR_HOME
+    auto=true
+    </pre>
+
+        Then create another file called <tt>sync_153.prf</tt> in which you replace the ip from 137.204.107.43 to 137.204.107.153 and <tt>sshargs</tt> from <tt>-p 22</tt> to <tt>-p 37335</tt>. The file should look something like
+    <pre>
+    root = /home/salvatori
+    root = ssh://137.204.107.153//home/salvatori
+    sshargs = -p 37335
+
+    ignore = Path .*
+    ignore = Name .*
+    ignore = Name *.pyc
+    ignore = Path bin
+    ignore = Path miniconda*
+    ignore = Path conda*
+    ignore = Name __pycache__
+    prefer = /home/salvatori
+
+    auto=true
+    </pre>
+    From now on you can execute the commands <kbd>unison sync_43</kbd> and <kbd>unison sync_153</kbd> to synchornize files between the corresponding servers.
+        <!--It is also possible to move files between servers using the <code>scp</code> command. For example, to
+        copy the &#39;project&#39; folder
+                from the home of server 40 to the home of server 153 you can execute</p>
         <kbd>scp -P 37335 -r /home/&lt;user&gt;/project &lt;username&gt;@137.204.107.153:/home/&lt;user&gt;</kbd>
-        <br><br>
+        <br><br>-->
         <h2 id="executing-tasks-with-slurm">Executing Tasks with SLURM</h2>
         <p><a href="https://slurm.schedmd.com/" target="_blank">SLURM</a> is a cluster manager that allows us to
             dynamically schedule
