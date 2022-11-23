@@ -34,16 +34,18 @@
         <ol>
             <li>Make sure you have an account on all 3 servers by logging in with the credential that you have been
                 provided</li>
-            <li> Change your password with a private one containing at least 10 characters; user lower case and upper
+            <li> Change your password with a private one containing at least 10 characters; use lower case and upper
                 case letters adding also numbers and symbols</li>
             <li>You should always use the <em>'byobu'</em> terminal (just type <kbd>byobu</kbd> after you login). This way, the
-                shell that is opened and on which you will execute the commands, remains active even when the terminal is
+                shell that is opened and on which you will execute the commands remains active even when the terminal is
                 closed (this is useful if you want to run long jobs)
             </li>
             <li>
                 <p>
-                    Check that <code>docker_rootless</code> has been installed on each server by running the following
-                    command: <kbd> docker ps</kbd> on each of them (check that no errors are returned).
+                    Install docker rootless by running on each server the script <kbd> install_rootless_docker.sh</kbd>
+                </p>
+                <p>
+                    After the installation is complete, restart the shell and check that docker is working by running <kbd>docker ps</kbd> (check that no errors are returned).
                     <br>
                     If docker is not working try to execute <kbd> systemctl --user start docker </kbd>
                 </p>
