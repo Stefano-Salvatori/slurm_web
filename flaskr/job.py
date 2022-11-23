@@ -133,8 +133,8 @@ class Job:
     current_working_directory: str = ""
 
     @property
-    def timeused(self):
-        datetime.datetime.fromtimestamp(time.time()) - datetime.datetime.fromtimestamp(self.start_time)
+    def timeused(self) -> datetime.timedelta:
+        return datetime.datetime.fromtimestamp(time.time()) - datetime.datetime.fromtimestamp(self.start_time)
     
     @property
     def gpu_indices(self) -> List[int]:

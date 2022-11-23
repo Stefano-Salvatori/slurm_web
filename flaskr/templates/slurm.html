@@ -11,7 +11,24 @@
             {% for node in nodes %}
             <div class="col-sm">
                 <div class="card h-100 node-card" id="{{node.address}}" data-hostname="{{node.hostname}}">
-                    <h5 class="card-header">{{node.hostname}}</h5>
+                    <div class="card-header">
+                        <h5>{{node.hostname}}</h5>
+                        <div type="button" class="btn" data-bs-toggle="popover" data-bs-title="Node info"
+                            data-bs-html="true" data-bs-content="
+                                <p> 
+                                    <b>State</b>: {{node.state|capitalize}}
+                                    </br>
+                                    <b>Cores</b>: {{node.cores}} 
+                                    | <b>Cpus</b>: {{node.cpus}} 
+                                    | <b>Memory</b>: {{node.real_memory//1000}}G
+                                    </br>
+                                    <b>Architecture</b>: {{node.architecture}}
+                                    | <b>OS</b>: {{node.operating_system}}
+                                </p>
+                            "><i class="fa fa-caret-down fa-lg node-info-icon" aria-hidden="true"></i></div>
+
+                    </div>
+
                     <div class="card-body">
                         <h5 class="card-title">{{node.address}}</h5>
                         <h6 class="card-subtitle">Gpu Jobs</h6>
@@ -24,6 +41,23 @@
                                 {% if job.gpu_indices and gpu_index in job.gpu_indices %}
                                 <li class="list-group-item">{{job.job_id}} - {{job.user_name|capitalize}} -
                                     <tt>{{job.name}}</tt>
+                                    <div class="elapsed-time">
+                                        {% set
+                                        days, hours, minutes, seconds = job.timeused.days, job.timeused.seconds //
+                                        3600,job.timeused.seconds // 60 % 60, job.timeused.seconds % 60 %}
+                                        {% if days > 0 %}
+                                        {{days}}d
+                                        {% endif %}
+                                        {% if hours > 0 %}
+                                        {{hours}}h
+                                        {% endif %}
+                                        {% if minutes > 0 %}
+                                        {{minutes}}m
+                                        {% endif %}
+                                        {% if seconds > 0 %}
+                                        {{seconds}}s
+                                        {% endif %}
+                                    </div>
                                 </li>
                                 {% endif %}
                                 {% endfor %}
@@ -31,13 +65,15 @@
                             <div class="card-footer">
                                 <div class="spinner-border spinner-border-sm" role="status">
                                     <span class="visually-hidden">Loading...</span>
-                                  </div>
+                                </div>
                             </div>
                         </div>
                         {% endfor %}
                         {% endfor %}
 
-                        {% if node.allocated_jobs|selectattr("job_state","equalto","RUNNING")|rejectattr("gpu_indices")|list|length > 0 %}
+                        {% if
+                        node.allocated_jobs|selectattr("job_state","equalto","RUNNING")|rejectattr("gpu_indices")|list|length
+                        > 0 %}
                         <h6 class="card-subtitle mt-3">Other Jobs</h6>
                         {% endif %}
                         <ul class="list-group">
@@ -54,10 +90,16 @@
             {% endfor %}
         </div>
         {% if jobs|selectattr("job_state", "equalto", "PENDING")|list|length > 0 %}
-        <div class="row">
-            <h2>Task Queue ({{jobs | selectattr("job_state","equalto","PENDING")|list|length}})</h2>
+        <div class="row mt-4">
+            <h2>Task Queue ({{jobs|selectattr("job_state", "equalto", "PENDING")|list|length}})
+                <sup data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="
+                {% for item in jobs|selectattr('job_state', 'equalto', 'PENDING')|list|groupby(attribute='user_name') %}
+                  {{ item.grouper }}: {% for number in item.list %}{{ loop.length }}{% endfor %} </br>
+                {% endfor %}
+                ">&#x1F6C8</sup>
+            </h2>
             <ul class="list-group list-group-flush">
-                {% for job in jobs | selectattr("job_state","equalto","PENDING") %}
+                {% for job in jobs|selectattr("job_state", "equalto", "PENDING") %}
                 <li class="list-group-item">{{job.job_id}} - {{job.user_name|capitalize}} - <tt>{{job.name}}</tt>
                 </li>
                 {% endfor %}

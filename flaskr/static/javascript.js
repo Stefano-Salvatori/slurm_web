@@ -1,6 +1,15 @@
+//enable popovers
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+//enable tooltips
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
 $(document).ready(async () => {
   gpus_info_interval = setIntervalImmediately(load_gpus_info, 5000);
 });
+
 
 function load_gpus_info() {
   $(".node-card").each((index, node) => {
@@ -14,7 +23,7 @@ function load_gpus_info() {
             temp = json[index].temperature;
             mem_occ = (json[index].memory_occupied / 1000).toFixed(1);
             mem_tot = (json[index].type[1] / 1000).toFixed(1);
-            util = json[index].gpu_utilization
+            util = json[index].gpu_utilization;
             temp_label = temperature_to_label(temp);
             $(gpu).children(".card-footer").html(`
                 <span class="badge bg-${temp_label}">temp: ${temp}°</span>
@@ -39,9 +48,9 @@ function temperature_to_label(temp) {
 function setIntervalImmediately(func, interval) {
   /**
    * Immediatley execute a function and then executes it after a specific interval
-   * 
-   * returns: The interval object 
+   *
+   * returns: The interval object
    */
-  func()
-  return setInterval(func, interval)
+  func();
+  return setInterval(func, interval);
 }
