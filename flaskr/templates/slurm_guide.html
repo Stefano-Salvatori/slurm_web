@@ -105,7 +105,7 @@
 
     auto=true
     </pre>
-    From now on you can execute the commands <kbd>unison sync_43</kbd> and <kbd>unison sync_153</kbd> to synchornize files between the corresponding servers.
+    From now on you can execute the commands <kbd>unison sync_43</kbd> and <kbd>unison sync_153</kbd> on the main server (137.204.107.40) to synchornize files between the other ones. 
         <!--It is also possible to move files between servers using the <code>scp</code> command. For example, to
         copy the &#39;project&#39; folder
                 from the home of server 40 to the home of server 153 you can execute</p>
@@ -135,7 +135,7 @@
             <li><code>-N 1</code> tells SLURM to run the task in 1 node</li>
             <li><code>--gpus=nvidia_geforce_rtx_3090:1</code> requires to allocate a nvidia_geforce_rtx_3090 GPU (the
                 task will be launched on server 40 or server 43 since they are the only one that have that type of GPU);
-                titan_xp can be specified instead of nvidia_geforce_rtx_3090 to require 12Gb GPU; or even
+                titan_xp can be specified instead of nvidia_geforce_rtx_3090 to require a 12Gb GPU; or even
                 <code>--gpus = 1</code> to require any GPU
             </li>
             <li><code>--pty</code> enables interactive mode</li>

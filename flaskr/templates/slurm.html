@@ -94,7 +94,7 @@
             <h2>Task Queue ({{jobs|selectattr("job_state", "equalto", "PENDING")|list|length}})
                 <sup data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="
                 {% for item in jobs|selectattr('job_state', 'equalto', 'PENDING')|list|groupby(attribute='user_name') %}
-                  {{ item.grouper }}: {% for number in item.list %}{{ loop.length }}{% endfor %} </br>
+                  {{ item.grouper }}: {{ item.list|length }} </br>
                 {% endfor %}
                 ">&#x1F6C8</sup>
             </h2>
