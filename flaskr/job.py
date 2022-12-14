@@ -140,6 +140,7 @@ class Job:
     def gpu_indices(self) -> List[int]:
         if self.gres_detail is None or len(self.gres_detail) == 0:
             return list()
-        parsed = re.compile("gpu:\w*:\d\(IDX:(\d)(-(\d))*\)").search(self.gres_detail[0])
-        return [int(g) for g in parsed.groups()[::2] if g is not None] if parsed is not None else []
+        parsed = re.compile("gpu:\w*:\d\(IDX:(\d)([,-](\d))*\)").search(self.gres_detail[0])
+        indices = [int(g) for g in parsed.groups()[::2] if g is not None] if parsed is not None else []
+        return indices
 
