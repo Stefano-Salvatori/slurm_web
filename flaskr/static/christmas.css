@@ -1,0 +1,98 @@
+:root {
+    --christmas_font: 'Mountains of Christmas';
+    --christmas_font_logo: 'PWChristmasTinsel', sans-serif;
+    --chistmas_main_color: brown;
+    --chistmas_secondary_color: forestgreen
+}
+
+.main {
+    background-color: var(--chistmas_main_color);
+}
+
+.navbar-brand {
+    font-family: var(--christmas_font_logo);
+    font-size: 1.5em;
+    color: var(--chistmas_main_color);
+}
+
+.nav-item .nav-link {
+    color: var(--chistmas_secondary_color);
+}
+
+.nav-item .nav-link.active {
+    color: var(--chistmas_secondary_color);
+}
+
+nav {
+    color: var(--chistmas_main_color);
+    font-family: var(--christmas_font);
+    font-size: 1.3em;
+}
+
+.card-header h5,
+h2 {
+    font-weight: 600;
+    color: var(--chistmas_main_color);
+}
+
+.card-body {
+    background-color: currentColor;
+}
+
+h5.card-title {
+    color: var(--chistmas_secondary_color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: var(--christmas_font);
+    color: var(--chistmas_main_color);
+}
+
+.h_secondary {
+    font-family: var(--christmas_font);
+    color: var(--chistmas_secondary_color);
+}
+
+.text_shadowed {
+    text-shadow: 2px 2px black;
+}
+
+.gpu-card {
+    /* border: dotted;
+   border-color: lightgray;
+   border-width: 3px;*/
+}
+
+.card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.node-info-icon {
+    color: rgb(150, 150, 150);
+}
+
+.node-info-icon:hover {
+    color: rgb(30, 30, 30);
+}
+
+.btn {
+    border: none;
+}
+
+.arrow:hover {
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3.5px;
+}
+
+.elapsed-time {
+    color: gray;
+}

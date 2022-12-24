@@ -6,10 +6,10 @@
 
 <body>
     {% with page="home" %}{% include "navigation.html" %}{% endwith %}
-    <div class="container-fluid p-3">
+    <div class="container-fluid p-3 main sky">
         <div class="row">
             {% for node in nodes %}
-            <div class="col-sm">
+            <div class="col-sm-3 mt-2">
                 <div class="card h-100 node-card" id="{{node.address}}" data-hostname="{{node.hostname}}">
                     <div class="card-header">
                         <h5>{{node.hostname}}</h5>
@@ -30,8 +30,8 @@
                     </div>
 
                     <div class="card-body">
-                        <h5 class="card-title">{{node.address}}</h5>
-                        <h6 class="card-subtitle">Gpu Jobs</h6>
+                        <h5 class="card-title text_shadowed">{{node.address}}</h5>
+                    <!--<h6 class="card-subtitle">Gpu Jobs</h6>-->
                         {% for gpu in node.gpus %}
                         {% for gpu_index in range(node["gpus"][gpu]) %}
                         <div class="card mt-3 gpu-card">
@@ -74,12 +74,12 @@
                         {% if
                         node.allocated_jobs|selectattr("job_state","equalto","RUNNING")|rejectattr("gpu_indices")|list|length
                         > 0 %}
-                        <h6 class="card-subtitle mt-3">Other Jobs</h6>
+                        <!--<h6 class="card-subtitle mt-3">Other Jobs</h6>-->
                         {% endif %}
                         <ul class="list-group">
                             {% for job in node.allocated_jobs | selectattr("job_state","equalto","RUNNING") %}
                             {% if not job.gpu_indices %}
-                            <li class="list-group-item">{{job.job_id}} - {{job.user_name|capitalize}}</li>
+                            <li class="list-group-item mt-2 rounded">{{job.job_id}} - {{job.user_name|capitalize}}</li>
                             {% endif %}
                             {% endfor %}
                             <ul class="list-group"></ul>
@@ -91,14 +91,14 @@
         </div>
         {% if jobs|selectattr("job_state", "equalto", "PENDING")|list|length > 0 %}
         <div class="row mt-4">
-            <h2>Task Queue ({{jobs|selectattr("job_state", "equalto", "PENDING")|list|length}})
+            <h2 class="h_secondary text_shadowed">Task Queue ({{jobs|selectattr("job_state", "equalto", "PENDING")|list|length}})
                 <sup data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="
                 {% for item in jobs|selectattr('job_state', 'equalto', 'PENDING')|list|groupby(attribute='user_name') %}
                   {{ item.grouper }}: {{ item.list|length }} </br>
                 {% endfor %}
                 ">&#x1F6C8</sup>
             </h2>
-            <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush m-2 rounded">
                 {% for job in jobs|selectattr("job_state", "equalto", "PENDING") %}
                 <li class="list-group-item">{{job.job_id}} - {{job.user_name|capitalize}} - <tt>{{job.name}}</tt>
                 </li>
@@ -108,5 +108,6 @@
         {% endif %}
     </div>
 
+    <script src="{{ url_for('static', filename='snow.js') }}"></script>
     <script src="{{ url_for('static', filename='javascript.js') }}"></script>
 </body>
