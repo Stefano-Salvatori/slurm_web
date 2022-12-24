@@ -135,12 +135,27 @@ class Job:
     @property
     def timeused(self) -> datetime.timedelta:
         return datetime.datetime.fromtimestamp(time.time()) - datetime.datetime.fromtimestamp(self.start_time)
-    
+
     @property
     def gpu_indices(self) -> List[int]:
         if self.gres_detail is None or len(self.gres_detail) == 0:
             return list()
-        parsed = re.compile("gpu:\w*:\d\(IDX:(\d)([,-](\d))*\)").search(self.gres_detail[0])
-        indices = [int(g) for g in parsed.groups()[::2] if g is not None] if parsed is not None else []
-        return indices
+
+        # SLURM specifies GPU indices either by range (e.g. 0-2), or by single index (e.g., 3)
+        # The complete list of GPU indices assigned to a job can be also a combination of these two types of formats; in
+        # that case we have a list of comma separated indices (e.g., 0-2,3,5-6)
+        gpu_idx_or_range = "\d(?:-\d)?"
+        all_indices = re.compile(f"gpu:\w*:\d\(IDX:({gpu_idx_or_range}(?:,{gpu_idx_or_range})*)\)").findall(
+            self.gres_detail[0]
+        )
+        all_gpu_indices = []
+        if len(all_indices) != 0:
+            for gpu_index_group in all_indices[0].split(","):
+                gpu_idx = [int(i) for i in gpu_index_group.split("-")]
+                if len(gpu_idx) == 1:  # we have a single index
+                    all_gpu_indices = all_gpu_indices + gpu_idx
+                else:  # we have an index range
+                    all_gpu_indices = all_gpu_indices + list(range(gpu_idx[0], gpu_idx[1] + 1))
+
+        return all_gpu_indices
 

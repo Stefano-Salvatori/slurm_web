@@ -6,6 +6,7 @@ from typing import Tuple
 class GpuType(Tuple[str, int], Enum):
     NVIDIA_GEFORCE_3090 = ("nvidia_geforce_rtx_3090", 24576)
     TITAN_XP = ("titan_xp", 12194)
+    NVIDIA_TITAN_XP = ("nvidia_titan_xp", 12288)
 
     def __init__(self, value: Tuple[str, int]):
         self.label = value[0]
