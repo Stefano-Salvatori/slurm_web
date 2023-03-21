@@ -9,3 +9,4 @@ Todos:
     This way a user cannot 'saturate' the task queue with nvidia-smi calls
 ✔ (5) Add a section in the guide on how to start docker if it is not working (i.e. systemctl --user start docker) @done(22-08-11 15:08)
 ☐ (6) It seems that when a node is down the whole application doesn't work
+☐ (7) Log output to file to check error status codes and prints

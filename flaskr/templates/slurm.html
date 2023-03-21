@@ -31,7 +31,7 @@
 
                     <div class="card-body">
                         <h5 class="card-title text_shadowed">{{node.address}}</h5>
-                    <!--<h6 class="card-subtitle">Gpu Jobs</h6>-->
+                        <!--<h6 class="card-subtitle">Gpu Jobs</h6>-->
                         {% for gpu in node.gpus %}
                         {% for gpu_index in range(node["gpus"][gpu]) %}
                         <div class="card mt-3 gpu-card">
@@ -91,7 +91,8 @@
         </div>
         {% if jobs|selectattr("job_state", "equalto", "PENDING")|list|length > 0 %}
         <div class="row mt-4">
-            <h2 class="h_secondary text_shadowed">Task Queue ({{jobs|selectattr("job_state", "equalto", "PENDING")|list|length}})
+            <h2 class="h_secondary text_shadowed">Task Queue ({{jobs|selectattr("job_state", "equalto",
+                "PENDING")|list|length}})
                 <sup data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="
                 {% for item in jobs|selectattr('job_state', 'equalto', 'PENDING')|list|groupby(attribute='user_name') %}
                   {{ item.grouper }}: {{ item.list|length }} </br>
@@ -99,15 +100,18 @@
                 ">&#x1F6C8</sup>
             </h2>
             <ul class="list-group list-group-flush m-2 rounded">
-                {% for job in jobs|selectattr("job_state", "equalto", "PENDING") %}
-                <li class="list-group-item">{{job.job_id}} - {{job.user_name|capitalize}} - <tt>{{job.name}}</tt>
-                </li>
+                {% for job in jobs|selectattr("job_state", "equalto", "PENDING")|sort(attribute='priority',
+                reverse=True) %}
+                <li class="list-group-item">{{job.job_id}} - {{job.user_name|capitalize}} - <tt>{{job.name}}</tt></li>
                 {% endfor %}
             </ul>
         </div>
         {% endif %}
     </div>
 
-    <script src="{{ url_for('static', filename='snow.js') }}"></script>
+    <!--
+        Uncomment to activate snow effect
+        <script src="{{ url_for('static', filename='snow.js') }}"></script>
+    -->
     <script src="{{ url_for('static', filename='javascript.js') }}"></script>
 </body>

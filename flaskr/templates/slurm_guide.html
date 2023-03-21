@@ -7,7 +7,7 @@
     {% with page="guide" %}{% include "navigation.html" %}{% endwith %}
     <div class="container-fluid p-3">
         <h1 id="slurm-guide">Cluster Usage Guide</h1>
-        <p>Our cluster includes 3 servers:</p>
+        <p>Our cluster includes 4 servers with GPUs:</p>
         <ul>
             <li>137.204.107.40 (<em>faretra</em>)
                 <ul>
@@ -27,12 +27,18 @@
                     <li>ssh on port 37335</li>
                 </ul>
             </li>
+            <li>137.204.107.232 (<em>moro232</em>)
+                <ul>
+                    <li>1 GPU Titan XP (12 Gb)</li>
+                    <li>ssh on port 37335</li>
+                </ul>
+            </li>
         </ul>
-        <p><em>faretra</em> is the <strong>master</strong> node and is the one from which most commands should be
-            executed.</p>
+        <p><em>faretra</em> is the <strong>master</strong> node and is the one from which you should execute all the commands. The other nodes are used only for computation. For instance, if you
+        run a training script that get executed on the node with IP 137.204.107.43, you should access that node only to move the saved files (e.g. model weights) to the main server faretra </p>
         <h2 id="preliminary-steps">Preliminary Steps</h2>
         <ol>
-            <li>Make sure you have an account on all 3 servers by logging in with the credential that you have been
+            <li>Make sure you have an account on all servers by logging in with the credential that you have been
                 provided</li>
             <li> Change your password with a private one containing at least 10 characters; use lower case and upper
                 case letters adding also numbers and symbols</li>
@@ -64,8 +70,8 @@
         </ol>
         <h2 id="file-distribution">File Distribution and Synchronization</h2>
         <p><strong>NB:</strong> We don't have a software that automatically manages the distribution of files. Each
-                user must make sure to keep files and folders synchronized on each server. To do so you can use
-                <code>unison</code>. 
+                user must make sure to keep files and folders synchronized on each server. If you want you can use
+                <code>unison</code> (note that, for the moment, synchronization using unison is available on the following servers: 137.204.107.40, 137.204.107.43, 137.204.107.153). 
         <h3>Synchronization with UNISON</h3>        
         Move into your own folder of the main server 137.204.107.40; create the <tt>.unison</tt> folder if it doesn't already exist. Then create a file named <tt>sync_43.prf</tt> with the following content (replace YOUR_HOME with the path to your home directory e.g., <tt>/home/salvatori</tt>):
     <pre>
