@@ -1,3 +1,6 @@
+# Slurm Web
+![Slurm Web](./images/slurm_web.png)
+
 # Start Application
 
 ```bash
