@@ -17,11 +17,6 @@ def sinfo():
     return render_template("slurm.html", nodes=nodes, jobs=jobs)
 
 
-@slurm_bp.route("/guide", methods=["GET"])
-def guide():
-    return render_template("slurm_guide.html")
-
-
 @slurm_bp.route("/api/v1/nodes/<hostname>/gpus", methods=["GET"])
 def node_gpus(hostname: str):
     return json.dumps(slurm_api.gpu_stats(hostname), default=vars)
